@@ -1,24 +1,25 @@
 #include <stdio.h>
 #include "linked_list.h"
 
-struct ListNode* new_node(int data) {
+struct ListNode* new_node(void* data, NodeType nodeType) {
 	struct ListNode *current = (struct ListNode*)malloc(sizeof(struct ListNode));
 	if (current == NULL) {
 		printf("cant allocate memory for new node......");
 		exit(1);
 	}
+	current->nodeType = nodeType;
 	current->data = data;
 	current->next = current->previous = current;
 	return current;
 }
 
-struct ListNode* init_list(int data) {
-	return new_node(data);
+struct ListNode* init_list() {
+	return new_node(-1, T_INT);
 }
 
 void insert_node_next(struct ListNode *current, struct ListNode *node) {
 	current->next->previous = node;
-	node->previous = current->previous;
+	node->previous = current;
 	node->next = current->next;
 	current->next = node;
 }
@@ -44,7 +45,6 @@ struct ListNode* next_node(struct ListNode *node) {
 }
 
 void print_reverse(struct ListNode *header){
-
 	if(header == NULL)
 		return;
 	if(header->next == header->previous == header){
